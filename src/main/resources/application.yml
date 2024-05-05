@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: todo
+  datasource:
+    url: jdbc:mysql://localhost:13306/todoDB
+    username: local
+    password: 1234
