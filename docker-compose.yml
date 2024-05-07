@@ -4,6 +4,7 @@ services:
     image: mysql:8.4.0
     ports:
       - '13306:3306'
+    volumes:
     environment:
       - 'MYSQL_ROOT_PASSWORD=1234'
       - 'MYSQL_DATABASE=todoDB'
