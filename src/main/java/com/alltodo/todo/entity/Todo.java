@@ -19,13 +19,6 @@ public class Todo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "task")
-    private String task;
-
-    @Column(name = "due_date")
-    private LocalDateTime dueDate;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    @Builder.Default private String status = "Pending";
+    @Column(name = "owner")
+    private String owner;
 }
