@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -26,4 +28,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "login_method")
     private LoginMethod loginMethod;
+
+    @OneToMany(mappedBy = "user")
+    private List<Todo> todos = new ArrayList<>();
 }
