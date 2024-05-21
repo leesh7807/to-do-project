@@ -5,8 +5,18 @@ spring:
     url: jdbc:mysql://localhost:13306/todo
     username: local
     password: 1234
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
 #  profiles:
 #    include: oauth
+
+logging:
+  level:
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 server:
   port: 8080

@@ -21,7 +21,7 @@ public class Todo {
     private Long id;
 
     @OneToMany(mappedBy = "todo")
-    List<TodoItem> todoItems = new ArrayList<>();
+    @Builder.Default List<TodoItem> todoItems = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
