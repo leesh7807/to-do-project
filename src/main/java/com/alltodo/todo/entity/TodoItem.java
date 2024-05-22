@@ -16,7 +16,9 @@ import java.util.Date;
 @AllArgsConstructor
 public class TodoItem {
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "item_id")
+    private Long itemId;
 
     @ManyToOne
     @JoinColumn(name = "todo_id")

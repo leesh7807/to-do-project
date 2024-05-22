@@ -17,7 +17,8 @@ import java.util.UUID;
 public class User {
     @Id
     @UuidGenerator
-    private UUID id;
+    @Column(name = "user_id")
+    private UUID userId;
 
     @Column(name = "email")
     private String email;
@@ -29,6 +30,6 @@ public class User {
     @Column(name = "login_method")
     private LoginMethod loginMethod;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default private List<Todo> todos = new ArrayList<>();
 }
