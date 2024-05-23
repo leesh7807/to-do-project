@@ -1,8 +1,6 @@
 package com.alltodo.todo.repository;
 
-import com.alltodo.todo.entity.LoginMethod;
-import com.alltodo.todo.entity.Todo;
-import com.alltodo.todo.entity.User;
+import com.alltodo.todo.entity.*;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,42 +23,24 @@ public class RepositoryTest {
     private TodoRepository todoRepository;
     @Autowired
     private TodoItemRepository todoItemRepository;
-    private final UUID uuid = UUID.randomUUID();
-    private final UUID uuid2 = UUID.randomUUID();
+
+    private User user1;
     @BeforeEach
     @Transactional
     public void setUp() {
-        User user = User.builder()
-                .userId(uuid)
+        // Given
+        user1 = User.builder()
                 .email("leesh7807@gmail.com")
                 .password("qwer1234")
                 .loginMethod(LoginMethod.EMAIL)
                 .build();
-        User user2 = User.builder()
-                .userId(uuid2)
-                .email("leesh7807@naver.com")
-                .password("qwer1234")
-                .loginMethod(LoginMethod.EMAIL)
-                .build();
-        userRepository.saveAndFlush(user);
-        userRepository.saveAndFlush(user2);
-        Todo todo = Todo.builder()
-                .user(user)
-                .owner("leesh7807@gmail.com")
-                .priority(1)
-                .build();
-        Todo todo2 = Todo.builder()
-                .user(user)
-                .owner("leesh7807@naver.com")
-                .priority(2)
-                .build();
-//        todoRepository.save(todo);
-//        todoRepository.save(todo2);
     }
     @Test
     public void saveAndFindUser() {
-        //
-        Optional<User> retrievedUser = userRepository.findById(uuid);
+        // When
+        User savedUser1 = userRepository.save(user1);
+        Optional<User> retrievedUser = userRepository.findById(savedUser1.getUserId());
+
 
         // Then
         assertThat(retrievedUser).isPresent();
@@ -69,13 +49,63 @@ public class RepositoryTest {
 
     @Test
     public void getUsersTodos() {
+        // Given
+        User savedUser1 = userRepository.save(user1);
+        Todo todo1 = Todo.builder()
+                .user(savedUser1)
+                .owner("leesh7807@gmail.com")
+                .priority(0)
+                .build();
+        Todo todo2 = Todo.builder()
+                .user(savedUser1)
+                .owner("leesh7807@naver.com")
+                .priority(1)
+                .build();
+
         // When
-        Optional<User> retrievedUser = userRepository.findById(uuid);
+        todoRepository.saveAndFlush(todo1);
+        todoRepository.saveAndFlush(todo2);
+        Optional<User> retrievedUser = userRepository.findById(savedUser1.getUserId());
 
         // Then
         assertThat(retrievedUser).isPresent();
         List<Todo> todos = retrievedUser.get().getTodos();
         assertThat(todos.get(0).getOwner()).isEqualTo("leesh7807@gmail.com");
         assertThat(todos.get(1).getOwner()).isEqualTo("leesh7807@naver.com");
+    }
+
+    @Test
+    public void getTodosItems() {
+        // Given
+        User savedUser1 = userRepository.save(user1);
+        Todo todo1 = Todo.builder()
+                .user(savedUser1)
+                .owner("leesh7807@gmail.com")
+                .priority(0)
+                .build();
+        Todo savedTodo = todoRepository.save(todo1);
+        TodoItem todoItem1 = TodoItem.builder()
+                .todo(savedTodo)
+                .status(Status.Pending)
+                .exp(LocalDateTime.now())
+                .priority(0)
+                .content("")
+                .build();
+        TodoItem todoItem2 = TodoItem.builder()
+                .todo(savedTodo)
+                .status(Status.Pending)
+                .exp(LocalDateTime.now())
+                .priority(1)
+                .content("")
+                .build();
+
+        // When
+        todoItemRepository.save(todoItem1);
+        todoItemRepository.save(todoItem2);
+        Optional<User> retrievedUser = userRepository.findById(savedUser1.getUserId());
+
+        // Then
+        assertThat(retrievedUser).isPresent();
+        assertThat(retrievedUser.get().getTodos().get(0).getTodoItems()).isNotEmpty();
     }
 }

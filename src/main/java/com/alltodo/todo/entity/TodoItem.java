@@ -1,19 +1,16 @@
 package com.alltodo.todo.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "todo_items")
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class TodoItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +21,26 @@ public class TodoItem {
     @JoinColumn(name = "todo_id")
     private Todo todo;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private Status status;
+
     @Column(name = "exp")
-    private Date exp;
+    private LocalDateTime exp;
 
     @Column(name = "priority")
     private Integer priority;
 
     @Column(name = "content")
     private String content;
+
+    @Builder
+    public TodoItem(Todo todo, Status status, LocalDateTime exp, Integer priority, String content) {
+        this.todo = todo;
+        todo.getTodoItems().add(this);
+        this.status = status;
+        this.exp = exp;
+        this.priority = priority;
+        this.content = content;
+    }
 }

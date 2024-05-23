@@ -11,9 +11,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "users")
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class User {
     @Id
     @UuidGenerator
@@ -31,5 +29,13 @@ public class User {
     private LoginMethod loginMethod;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Builder.Default private List<Todo> todos = new ArrayList<>();
+    private List<Todo> todos;
+
+    @Builder
+    public User(String email, String password, LoginMethod loginMethod) {
+        this.email = email;
+        this.password = password;
+        this.loginMethod = loginMethod;
+        todos = new ArrayList<>();
+    }
 }

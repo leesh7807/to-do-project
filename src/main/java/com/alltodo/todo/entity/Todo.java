@@ -1,7 +1,6 @@
 package com.alltodo.todo.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,9 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "todos")
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +19,7 @@ public class Todo {
     private Long todoId;
 
     @OneToMany(mappedBy = "todo", cascade = CascadeType.ALL)
-    @Builder.Default List<TodoItem> todoItems = new ArrayList<>();
+    List<TodoItem> todoItems;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -33,4 +30,12 @@ public class Todo {
 
     @Column(name = "priority")
     private Integer priority;
+    @Builder
+    public Todo(User user, String owner, Integer priority) {
+        this.todoItems = new ArrayList<>();
+        this.user = user;
+        user.getTodos().add(this);
+        this.owner = owner;
+        this.priority = priority;
+    }
 }
