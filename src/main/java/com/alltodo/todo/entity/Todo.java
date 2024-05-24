@@ -1,6 +1,7 @@
 package com.alltodo.todo.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "todos")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -3,6 +3,7 @@ package com.alltodo.todo.repository;
 import com.alltodo.todo.entity.*;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -36,6 +37,7 @@ public class RepositoryTest {
                 .build();
     }
     @Test
+    @DisplayName("user 저장")
     public void saveAndFindUser() {
         // When
         User savedUser1 = userRepository.save(user1);
@@ -48,6 +50,7 @@ public class RepositoryTest {
     }
 
     @Test
+    @DisplayName("user에 todo 저장")
     public void getUsersTodos() {
         // Given
         User savedUser1 = userRepository.save(user1);
@@ -63,8 +66,8 @@ public class RepositoryTest {
                 .build();
 
         // When
-        todoRepository.saveAndFlush(todo1);
-        todoRepository.saveAndFlush(todo2);
+        todoRepository.save(todo1);
+        todoRepository.save(todo2);
         Optional<User> retrievedUser = userRepository.findById(savedUser1.getUserId());
 
         // Then
@@ -75,6 +78,7 @@ public class RepositoryTest {
     }
 
     @Test
+    @DisplayName("todo에 item들 저장")
     public void getTodosItems() {
         // Given
         User savedUser1 = userRepository.save(user1);

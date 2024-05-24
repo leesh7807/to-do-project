@@ -1,6 +1,7 @@
 package com.alltodo.todo.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "todo_items")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TodoItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
