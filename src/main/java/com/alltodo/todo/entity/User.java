@@ -32,10 +32,11 @@ public class User {
     private List<Todo> todos;
 
     @Builder
-    public User(String email, String password, LoginMethod loginMethod) {
+    public User(UUID userId, String email, String password, LoginMethod loginMethod, List<Todo> todos) {
+        this.userId = userId;
         this.email = email;
         this.password = password;
         this.loginMethod = loginMethod;
-        todos = new ArrayList<>();
+        this.todos = todos;
     }
 }
