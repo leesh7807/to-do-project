@@ -1,16 +1,23 @@
 package com.alltodo.todo.mapper;
 
 import com.alltodo.todo.dto.TodoDTO;
+import com.alltodo.todo.dto.UserDTO;
 import com.alltodo.todo.entity.Todo;
+import com.alltodo.todo.entity.User;
+import lombok.AllArgsConstructor;
 
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+@AllArgsConstructor
 public class TodoMapper {
-    public static TodoDTO toDTO(Todo todo) {
-        // have to implement toDTO func
-        return new TodoDTO();
+    private UserMapper userMapper;
+    private TodoItemMapper todoItemMapper;
+    public void toEntity(TodoDTO todoDTO) {
+
     }
 
-    public static Todo toEntity(TodoDTO todoDTO) {
-        // have to implement toEntity func
-        return Todo.builder().build();
+    public void toDTO(Todo Todo) {
+
     }
 }

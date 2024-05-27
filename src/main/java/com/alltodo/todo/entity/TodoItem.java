@@ -1,10 +1,7 @@
 package com.alltodo.todo.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +9,8 @@ import java.time.LocalDateTime;
 @Table(name = "todo_items")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class TodoItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,14 +33,4 @@ public class TodoItem {
 
     @Column(name = "content")
     private String content;
-
-    @Builder
-    public TodoItem(Todo todo, Status status, LocalDateTime exp, Integer priority, String content) {
-        this.todo = todo;
-        todo.getTodoItems().add(this);
-        this.status = status;
-        this.exp = exp;
-        this.priority = priority;
-        this.content = content;
-    }
 }
