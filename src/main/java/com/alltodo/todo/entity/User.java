@@ -31,5 +31,5 @@ public class User {
     private LoginMethod loginMethod;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Todo> todos;
+    @Builder.Default private List<Todo> todos = new ArrayList<>();
 }

@@ -23,7 +23,7 @@ public class Todo {
     private String title;
 
     @OneToMany(mappedBy = "todo", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<TodoItem> todoItems;
+    @Builder.Default List<TodoItem> todoItems = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
