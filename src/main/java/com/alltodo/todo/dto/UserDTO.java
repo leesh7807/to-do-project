@@ -6,7 +6,8 @@ import lombok.*;
 import java.util.List;
 
 @Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserDTO {
+    private String email;
+    private String plainPassword;
+    private LoginMethod loginMethod;
 }

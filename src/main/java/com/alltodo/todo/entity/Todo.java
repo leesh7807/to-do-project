@@ -34,4 +34,12 @@ public class Todo {
 
     @Column(name = "priority")
     private Integer priority;
+
+    public void addItem(TodoItem todoItem) {
+        todoItems.add(todoItem);
+    }
+
+    public void removeItem(TodoItem todoItem) {
+        todoItems.remove(todoItem);
+    }
 }

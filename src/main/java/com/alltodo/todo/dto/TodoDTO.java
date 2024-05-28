@@ -1,12 +1,10 @@
 package com.alltodo.todo.dto;
 
-import com.alltodo.todo.entity.User;
-import lombok.*;
-
-import java.util.List;
+import lombok.Getter;
 
 @Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TodoDTO {
+    private Long todoId;
+    private String title;
+    private Integer priority;
 }

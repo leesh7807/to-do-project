@@ -32,4 +32,12 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Builder.Default private List<Todo> todos = new ArrayList<>();
+
+    public void addTodo(Todo todo) {
+        todos.add(todo);
+    }
+
+    public void removeTodo(Todo todo) {
+        todos.remove(todo);
+    }
 }
