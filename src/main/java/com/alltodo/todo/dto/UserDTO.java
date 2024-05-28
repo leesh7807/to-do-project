@@ -9,5 +9,4 @@ import java.util.List;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserDTO {
-
 }

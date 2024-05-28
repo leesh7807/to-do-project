@@ -16,7 +16,7 @@ import java.util.UUID;
 @Builder
 public class User {
     @Id
-    @UuidGenerator
+    @UuidGenerator(style = UuidGenerator.Style.AUTO)
     @Column(name = "user_id")
     private UUID userId;
 

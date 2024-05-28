@@ -6,17 +6,17 @@ CREATE TABLE IF NOT EXISTS `users` (
 );
 
 CREATE TABLE IF NOT EXISTS `todos` (
-    `todo_id`       INT AUTO_INCREMENT PRIMARY KEY COMMENT 'todo id',
+    `todo_id`       BINARY(16) PRIMARY KEY COMMENT 'todo id, UUID',
     `user_id`       BINARY(16) NOT NULL COMMENT 'user_id foreign key',
-    `title`          VARCHAR(255) NOT NULL COMMENT 'title of todo',
+    `title`         VARCHAR(255) NOT NULL COMMENT 'title of todo',
     `owner`         VARCHAR(20) NOT NULL COMMENT 'todo owner',
     `priority`      INT NOT NULL COMMENT 'set position in todos',
     FOREIGN KEY (user_id) REFERENCES `users` (user_id)
 );
 
 CREATE TABLE IF NOT EXISTS `todo_items` (
-    `item_id`       INT AUTO_INCREMENT PRIMARY KEY COMMENT 'item id in todo',
-    `todo_id`       INT NOT NULL COMMENT 'todo id foreign key',
+    `item_id`       BINARY(16) PRIMARY KEY COMMENT 'item id in todo, UUID',
+    `todo_id`       BINARY(16) NOT NULL COMMENT 'todo id foreign key',
     `status`        VARCHAR(20) NOT NULL COMMENT 'is completed or pending?',
     `exp`           DATETIME COMMENT 'expiry datetime',
     `priority`      INT NOT NULL COMMENT 'set position in list',

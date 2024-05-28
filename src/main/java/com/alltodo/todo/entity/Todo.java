@@ -2,6 +2,7 @@ package com.alltodo.todo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
 @Builder
 public class Todo {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @UuidGenerator(style = UuidGenerator.Style.AUTO)
     @Column(name = "todo_id")
     private Long todoId;
 
