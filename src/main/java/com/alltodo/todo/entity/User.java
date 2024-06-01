@@ -31,7 +31,7 @@ public class User {
     private LoginMethod loginMethod;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @Builder.Default private List<Todo> todos = new ArrayList<>();
+    private List<Todo> todos;
 
     public void addTodo(Todo todo) {
         todos.add(todo);
