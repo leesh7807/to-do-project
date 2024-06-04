@@ -24,7 +24,7 @@ public class User {
     private String email;
 
     @Column(name = "password")
-    private String password;
+    private String encryptedPassword;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "login_method")

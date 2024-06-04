@@ -10,6 +10,6 @@ import java.util.List;
 @Builder
 public class UserDTO {
     private String email;
-    private String plainPassword;
+    private String password;
     private LoginMethod loginMethod;
 }
