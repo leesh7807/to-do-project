@@ -11,8 +11,6 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class TodoMapper {
-    private UserMapper userMapper;
-    private TodoItemMapper todoItemMapper;
     public void toEntity(TodoDTO todoDTO) {
 
     }
