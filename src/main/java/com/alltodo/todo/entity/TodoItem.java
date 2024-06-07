@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "todo_items")
@@ -14,9 +15,9 @@ import java.time.LocalDateTime;
 @Builder
 public class TodoItem {
     @Id
-    @UuidGenerator(style = UuidGenerator.Style.AUTO)
+    @UuidGenerator
     @Column(name = "item_id")
-    private Long itemId;
+    private UUID itemId;
 
     @ManyToOne
     @JoinColumn(name = "todo_id")

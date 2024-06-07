@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "todos")
@@ -15,9 +15,9 @@ import java.util.List;
 @Builder
 public class Todo {
     @Id
-    @UuidGenerator(style = UuidGenerator.Style.AUTO)
+    @UuidGenerator
     @Column(name = "todo_id")
-    private Long todoId;
+    private UUID todoId;
 
     @Column(name = "title")
     private String title;
@@ -28,9 +28,6 @@ public class Todo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
-    @Column(name = "owner")
-    private String owner;
 
     @Column(name = "priority")
     private Integer priority;

@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS `todos` (
     `todo_id`       BINARY(16) PRIMARY KEY COMMENT 'todo id, UUID',
     `user_id`       BINARY(16) NOT NULL COMMENT 'user_id foreign key',
     `title`         VARCHAR(255) NOT NULL COMMENT 'title of todo',
-    `owner`         VARCHAR(20) NOT NULL COMMENT 'todo owner',
     `priority`      INT NOT NULL COMMENT 'set position in todos',
     FOREIGN KEY (user_id) REFERENCES `users` (user_id)
 );

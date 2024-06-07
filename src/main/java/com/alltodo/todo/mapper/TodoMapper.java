@@ -1,21 +1,32 @@
 package com.alltodo.todo.mapper;
 
 import com.alltodo.todo.dto.TodoDTO;
-import com.alltodo.todo.dto.UserDTO;
 import com.alltodo.todo.entity.Todo;
+import com.alltodo.todo.entity.TodoItem;
 import com.alltodo.todo.entity.User;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @AllArgsConstructor
+@Component
 public class TodoMapper {
-    public void toEntity(TodoDTO todoDTO) {
-
+    public Todo toEntity(TodoDTO todoDTO, User user, List<TodoItem> todoItems) {
+        return Todo.builder()
+                .todoId(todoDTO.getTodoId())
+                .title(todoDTO.getTitle())
+                .todoItems(todoItems)
+                .user(user)
+                .priority(todoDTO.getPriority())
+                .build();
     }
 
-    public void toDTO(Todo Todo) {
-
+    public TodoDTO toDTO(Todo todo) {
+        return TodoDTO.builder()
+                .todoId(todo.getTodoId())
+                .title(todo.getTitle())
+                .priority(todo.getPriority())
+                .build();
     }
 }
