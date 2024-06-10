@@ -6,6 +6,8 @@ spring:
     username: local
     password: 1234
   jpa:
+    hibernate:
+      ddl-auto: create
     properties:
       hibernate:
         show_sql: true
