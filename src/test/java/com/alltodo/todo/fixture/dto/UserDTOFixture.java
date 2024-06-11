@@ -5,7 +5,7 @@ import com.alltodo.todo.entity.LoginMethod;
 
 public class UserDTOFixture {
     private static final String defaultEmail = "test@naver.com";
-    private static final String defaultPassword = "qwer1234";
+    private static final String defaultPassword = "test123!!";
     private static final LoginMethod defaultLoginMethod = LoginMethod.EMAIL;
     public static UserDTO createDefaultUserDTO() {
         return UserDTO.builder()

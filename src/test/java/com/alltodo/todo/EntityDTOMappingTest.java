@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ContextConfiguration(classes = {SecurityConfig.class, UserMapper.class, TodoMapper.class, TodoItemMapper.class})
 @SpringBootTest
-public class MappingTest {
+public class EntityDTOMappingTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
