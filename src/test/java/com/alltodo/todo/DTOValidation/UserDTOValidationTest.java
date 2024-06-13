@@ -21,6 +21,7 @@ public class UserDTOValidationTest {
     @Autowired
     private Validator validator;
     private UserDTO userDTO;
+
     @BeforeEach
     public void setUp() {
         userDTO = UserDTOFixture.createDefaultUserDTO();

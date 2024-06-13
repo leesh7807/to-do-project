@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TodoDTOFixture {
     private static final UUID defaultTodoId = UUID.randomUUID();
     private static final String defaultTitle = "test";
-    private static final AtomicInteger counter = new AtomicInteger();
+    private static final AtomicInteger counter = new AtomicInteger(1);
     public static TodoDTO createDefaultTodoDTO() {
         return TodoDTO.builder()
                 .todoId(defaultTodoId)

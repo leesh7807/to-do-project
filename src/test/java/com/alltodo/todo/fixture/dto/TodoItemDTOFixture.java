@@ -11,7 +11,7 @@ public class TodoItemDTOFixture {
     private static final UUID defaultItemId = UUID.randomUUID();
     private static final Status defaultStatus = Status.Pending;
     private static final LocalDateTime defaultExp = LocalDateTime.now();
-    private static final AtomicInteger counter = new AtomicInteger();
+    private static final AtomicInteger counter = new AtomicInteger(1);
     private static final String defaultContent = "test";
     public static TodoItemDTO createDefaultTodoItemDTO() {
         return TodoItemDTO.builder()
