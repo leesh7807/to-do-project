@@ -28,7 +28,7 @@ public class TodoItemDTOValidationTest {
     }
 
     @Test
-    public void whenThereAreNoProblems() {
+    public void accepted() {
         // when
         Set<ConstraintViolation<TodoItemDTO>> violations = validator.validate(todoItemDTO);
 

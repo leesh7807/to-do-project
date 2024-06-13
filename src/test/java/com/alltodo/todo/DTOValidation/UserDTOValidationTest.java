@@ -27,7 +27,7 @@ public class UserDTOValidationTest {
         userDTO = UserDTOFixture.createDefaultUserDTO();
     }
     @Test
-    public void whenEmailIsAccepted() {
+    public void accepted() {
         // when
         Set<ConstraintViolation<UserDTO>> violations = validator.validate(userDTO);
 

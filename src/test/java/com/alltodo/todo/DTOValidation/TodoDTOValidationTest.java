@@ -28,7 +28,7 @@ public class TodoDTOValidationTest {
     }
 
     @Test
-    public void whenThereAreNoProblems() {
+    public void accepted() {
         // when
         Set<ConstraintViolation<TodoDTO>> violations = validator.validate(todoDTO);
 
