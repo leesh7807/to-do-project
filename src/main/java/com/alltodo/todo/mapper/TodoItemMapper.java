@@ -7,17 +7,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TodoItemMapper {
-    public TodoItem toEntity(TodoItemDTO todoItemDTO, Todo todo) {
-        return TodoItem.builder()
-                .itemId(todoItemDTO.getItemId())
-                .todo(todo)
-                .status(todoItemDTO.getStatus())
-                .exp(todoItemDTO.getExp())
-                .priority(todoItemDTO.getPriority())
-                .content(todoItemDTO.getContent())
-                .build();
-    }
-
     public TodoItemDTO toDTO(TodoItem todoItem) {
         return TodoItemDTO.builder()
                 .itemId(todoItem.getItemId())

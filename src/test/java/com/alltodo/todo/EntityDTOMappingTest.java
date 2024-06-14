@@ -41,23 +41,6 @@ public class EntityDTOMappingTest {
     private TodoMapper todoMapper;
     @Autowired
     private TodoItemMapper todoItemMapper;
-    @Test
-    @DisplayName("UserDTO to User Entity")
-    public void DTOToUserTest() {
-        // given
-        UUID userId = UUID.randomUUID();
-        UserDTO userDTO = UserDTOFixture.createDefaultUserDTO();
-        List<Todo> todos = new ArrayList<>();
-
-        // when
-        User user = userMapper.toEntity(userId, userDTO, todos);
-
-        //then
-        assertAll(
-                () -> assertNotNull(user),
-                () -> assertTrue(passwordEncoder.matches(userDTO.getPassword(), user.getEncryptedPassword()))
-        );
-    }
 
     @Test
     @DisplayName("User Entity to UserDTO")
@@ -76,24 +59,6 @@ public class EntityDTOMappingTest {
     }
 
     @Test
-    @DisplayName("TodoDTO to Todo Entity")
-    public void DTOToTodoTest() {
-        // given
-        TodoDTO todoDTO = TodoDTOFixture.createDefaultTodoDTO();
-        User user = UserFixture.createDefaultUser();
-        List<TodoItem> todoItems = new ArrayList<>();
-
-        // when
-        Todo todo = todoMapper.toEntity(todoDTO, user, todoItems);
-
-        // then
-        assertAll(
-                () -> assertNotNull(todo),
-                () -> assertEquals(todoDTO.getTodoId(), todo.getTodoId())
-        );
-    }
-
-    @Test
     @DisplayName("Todo Entity to TodoDTO")
     public void TodoToDTOTest() {
         // given
@@ -106,23 +71,6 @@ public class EntityDTOMappingTest {
         assertAll(
                 () -> assertNotNull(todoDTO),
                 () -> assertEquals(todo.getTodoId(), todoDTO.getTodoId())
-        );
-    }
-
-    @Test
-    @DisplayName("TodoItemDTO to TodoItem Entity")
-    public void DTOToTodoItemTest() {
-        // given
-        TodoItemDTO todoItemDTO = TodoItemDTOFixture.createDefaultTodoItemDTO();
-        Todo todo = TodoFixture.createDefaultTodo();
-
-        // when
-        TodoItem todoItem = todoItemMapper.toEntity(todoItemDTO, todo);
-
-        // then
-        assertAll(
-                () -> assertNotNull(todoItem),
-                () -> assertEquals(todoItemDTO.getItemId(), todoItem.getItemId())
         );
     }
 

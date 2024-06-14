@@ -10,16 +10,6 @@ import java.util.List;
 
 @Component
 public class TodoMapper {
-    public Todo toEntity(TodoDTO todoDTO, User user, List<TodoItem> todoItems) {
-        return Todo.builder()
-                .todoId(todoDTO.getTodoId())
-                .title(todoDTO.getTitle())
-                .todoItems(todoItems)
-                .user(user)
-                .priority(todoDTO.getPriority())
-                .build();
-    }
-
     public TodoDTO toDTO(Todo todo) {
         return TodoDTO.builder()
                 .todoId(todo.getTodoId())
