@@ -1,7 +1,6 @@
 package com.alltodo.todo.service;
 
 import com.alltodo.todo.dto.UserDTO;
-import com.alltodo.todo.entity.LoginMethod;
 import com.alltodo.todo.entity.User;
 import com.alltodo.todo.fixture.dto.UserDTOFixture;
 import com.alltodo.todo.repository.UserRepository;
@@ -17,9 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class SignUpWithEmailTest {
     @Autowired
-    private UserRepository userRepository;
+    UserService userService;
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    UserRepository userRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
     private UserDTO userDTO;
 
     @BeforeEach
@@ -29,32 +30,15 @@ public class SignUpWithEmailTest {
 
     @Test
     public void accepted() {
-        String email = userDTO.getEmail();
-        String password = userDTO.getPassword();
-        LoginMethod loginMethod = userDTO.getLoginMethod();
+        assertDoesNotThrow(() -> userService.signUpWithEmail(userDTO));
 
-        User testUser;
-        if(loginMethod == LoginMethod.EMAIL) {
-            Optional<User> optionalUser = userRepository.findByEmailAndLoginMethod(email, loginMethod);
-            if(optionalUser.isEmpty()) {
-                User newUser = User.builder().
-                        email(email).
-                        encryptedPassword(passwordEncoder.encode(password)).
-                        loginMethod(loginMethod)
-                        .build();
+        Optional<User> optionalUser = userRepository.findByEmailAndLoginMethod(userDTO.getEmail(), userDTO.getLoginMethod());
 
-                testUser = userRepository.save(newUser);
-            } else {
-                testUser = null;
-            }
-        } else {
-            testUser = null;
-        }
-
-        assertNotNull(testUser);
-        assertAll("User properties",
-                () -> assertEquals(email, testUser.getEmail()),
-                () -> assertTrue(passwordEncoder.matches(password, testUser.getEncryptedPassword()))
+        assertTrue(optionalUser.isPresent());
+        User user = optionalUser.get();
+        assertAll(
+                () -> assertEquals(userDTO.getEmail(), user.getEmail()),
+                () -> assertTrue(passwordEncoder.matches(userDTO.getPassword(), user.getEncryptedPassword()))
         );
     }
 }

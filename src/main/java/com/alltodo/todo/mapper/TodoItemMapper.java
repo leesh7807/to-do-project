@@ -1,7 +1,6 @@
 package com.alltodo.todo.mapper;
 
 import com.alltodo.todo.dto.TodoItemDTO;
-import com.alltodo.todo.entity.Todo;
 import com.alltodo.todo.entity.TodoItem;
 import org.springframework.stereotype.Component;
 
