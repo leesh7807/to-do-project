@@ -1,8 +1,12 @@
 package com.alltodo.todo.service;
 
 import com.alltodo.todo.dto.UserDTO;
+import com.alltodo.todo.entity.LoginMethod;
 import com.alltodo.todo.entity.User;
+import com.alltodo.todo.exception.InvalidLoginMethodException;
+import com.alltodo.todo.exception.UserAlreadyExistsException;
 import com.alltodo.todo.fixture.dto.UserDTOFixture;
+import com.alltodo.todo.fixture.entity.UserFixture;
 import com.alltodo.todo.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,5 +44,21 @@ public class SignUpWithEmailTest {
                 () -> assertEquals(userDTO.getEmail(), user.getEmail()),
                 () -> assertTrue(passwordEncoder.matches(userDTO.getPassword(), user.getEncryptedPassword()))
         );
+    }
+
+    @Test
+    public void whenNotEmailMethod() {
+        userDTO.setLoginMethod(LoginMethod.OAUTH);
+
+        assertThrows(InvalidLoginMethodException.class, () -> userService.signUpWithEmail(userDTO));
+    }
+
+    @Test
+    public void whenUserAlreadyExists() {
+        UserDTO userDTO2 = UserDTOFixture.createDefaultUserDTO();
+
+        assertDoesNotThrow(() -> userService.signUpWithEmail(userDTO));
+
+        assertThrows(UserAlreadyExistsException.class, () -> userService.signUpWithEmail(userDTO2));
     }
 }

@@ -3,6 +3,7 @@ package com.alltodo.todo.service;
 import com.alltodo.todo.dto.UserDTO;
 import com.alltodo.todo.entity.LoginMethod;
 import com.alltodo.todo.entity.User;
+import com.alltodo.todo.exception.InvalidLoginMethodException;
 import com.alltodo.todo.exception.UserAlreadyExistsException;
 import com.alltodo.todo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class UserService {
         LoginMethod loginMethod = userDTO.getLoginMethod();
 
         if(loginMethod != LoginMethod.EMAIL) {
-            throw new IllegalArgumentException("Invalid Login Method");
+            throw new InvalidLoginMethodException("Invalid Login Method");
         }
 
         Optional<User> optionalUser = userRepository.findByEmailAndLoginMethod(email, loginMethod);
