@@ -6,7 +6,6 @@ import com.alltodo.todo.entity.User;
 import com.alltodo.todo.exception.InvalidLoginMethodException;
 import com.alltodo.todo.exception.UserAlreadyExistsException;
 import com.alltodo.todo.fixture.dto.UserDTOFixture;
-import com.alltodo.todo.fixture.entity.UserFixture;
 import com.alltodo.todo.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
