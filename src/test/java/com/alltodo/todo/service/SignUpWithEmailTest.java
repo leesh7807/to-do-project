@@ -3,7 +3,6 @@ package com.alltodo.todo.service;
 import com.alltodo.todo.dto.UserDTO;
 import com.alltodo.todo.entity.LoginMethod;
 import com.alltodo.todo.entity.User;
-import com.alltodo.todo.exception.InvalidLoginMethodException;
 import com.alltodo.todo.exception.UserAlreadyExistsException;
 import com.alltodo.todo.fixture.dto.UserDTOFixture;
 import com.alltodo.todo.repository.UserRepository;
@@ -35,7 +34,7 @@ public class SignUpWithEmailTest {
     public void accepted() {
         assertDoesNotThrow(() -> userService.signUpWithEmail(userDTO));
 
-        Optional<User> optionalUser = userRepository.findByEmailAndLoginMethod(userDTO.getEmail(), userDTO.getLoginMethod());
+        Optional<User> optionalUser = userRepository.findByEmail(userDTO.getEmail());
 
         assertTrue(optionalUser.isPresent());
         User user = optionalUser.get();
@@ -49,7 +48,7 @@ public class SignUpWithEmailTest {
     public void whenNotEmailMethod() {
         userDTO.setLoginMethod(LoginMethod.OAUTH);
 
-        assertThrows(InvalidLoginMethodException.class, () -> userService.signUpWithEmail(userDTO));
+        assertThrows(IllegalArgumentException.class, () -> userService.signUpWithEmail(userDTO));
     }
 
     @Test
