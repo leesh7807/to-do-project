@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TodoItemMapper {
-    public TodoItemDTO toDTO(TodoItem todoItem) {
+    public static TodoItemDTO toDTO(TodoItem todoItem) {
         return TodoItemDTO.builder()
                 .itemId(todoItem.getItemId())
                 .status(todoItem.getStatus())
