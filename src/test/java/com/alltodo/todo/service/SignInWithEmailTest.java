@@ -6,8 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class SignInWithEmailTest {
     @Autowired
-    AuthenticationManagerBuilder authenticationManagerBuilder;
+    AuthenticationManager authenticationManager;
     @Autowired
     UserService userService;
     private UserDTO userDTO;
@@ -32,7 +32,7 @@ public class SignInWithEmailTest {
         assertAll(
                 // sign in
                 () -> assertDoesNotThrow(() -> {
-                Authentication auth = authenticationManagerBuilder.getObject().authenticate(new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getPassword()));
+                Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getPassword()));
                 SecurityContextHolder.getContext().setAuthentication(auth);}),
                 () -> assertTrue(SecurityContextHolder.getContext().getAuthentication().isAuthenticated())
                 );
