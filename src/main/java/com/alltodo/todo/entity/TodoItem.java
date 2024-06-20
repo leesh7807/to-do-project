@@ -19,7 +19,7 @@ public class TodoItem {
     @Column(name = "item_id")
     private UUID itemId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "todo_id")
     private Todo todo;
 
