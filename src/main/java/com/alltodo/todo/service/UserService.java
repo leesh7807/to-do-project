@@ -36,9 +36,9 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException(loginMethod.toString());
         }
 
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        if (optionalUser.isPresent()) {
-            throw new UserAlreadyExistsException("User with email" + email + "Already Exists");
+        Optional<User> duplicatedEmailUser = userRepository.findByEmail(email);
+        if (duplicatedEmailUser.isPresent()) {
+            throw new UserAlreadyExistsException(email);
         }
 
         User newUser = User.builder().

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -23,8 +24,28 @@ import static org.mockito.Mockito.when;
 public class SignUpWithEmailTest {
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
     @InjectMocks
     private UserService userService;
+
+    @Test
+    public void accepted() {
+        // given
+        UserDTO userDTO = UserDTOFixture.createDefaultUserDTO();
+        String encryptedPassword = "encodedTest123!!";
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(anyString())).thenReturn(encryptedPassword);
+
+        // when
+        try {
+            userService.signUpWithEmail(userDTO);
+
+        // then
+        } catch(Exception e) {
+            fail("There is Exception: " + e.getMessage());
+        }
+    }
 
     @Test
     public void whenNotEmailMethod() {
@@ -45,7 +66,7 @@ public class SignUpWithEmailTest {
 
     @Test
     public void whenUserAlreadyExists() {
-        // given v
+        // given
         UserDTO userDTO = UserDTOFixture.createDefaultUserDTO();
         User user = UserFixture.createDefaultUser();
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));

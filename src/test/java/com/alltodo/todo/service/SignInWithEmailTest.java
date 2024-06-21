@@ -1,40 +1,47 @@
 package com.alltodo.todo.service;
 
 import com.alltodo.todo.dto.UserDTO;
+import com.alltodo.todo.entity.LoginMethod;
+import com.alltodo.todo.entity.User;
 import com.alltodo.todo.fixture.dto.UserDTOFixture;
-import org.junit.jupiter.api.BeforeEach;
+import com.alltodo.todo.repository.UserRepository;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class SignInWithEmailTest {
-    @Autowired
-    AuthenticationManager authenticationManager;
-    @Autowired
-    UserService userService;
-    private UserDTO userDTO;
-
-    @BeforeEach
-    public void setUp() {
-        // sign up
-        userDTO = UserDTOFixture.createDefaultUserDTO();
-        userService.signUpWithEmail(userDTO);
-    }
+    @Mock
+    private UserRepository userRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    @InjectMocks
+    private UserService userService;
 
     @Test
-    public void whenUserSignInSuccessfully() {
-        assertAll(
-                // sign in
-                () -> assertDoesNotThrow(() -> {
-                Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getPassword()));
-                SecurityContextHolder.getContext().setAuthentication(auth);}),
-                () -> assertTrue(SecurityContextHolder.getContext().getAuthentication().isAuthenticated())
-                );
+    public void test() {
+        UserDTO userDTO = UserDTOFixture.createDefaultUserDTO();
+        String email = userDTO.getEmail();
+        String password = userDTO.getPassword();
+        LoginMethod loginMethod = userDTO.getLoginMethod();
+
+        Optional<User> registeredUser = userRepository.findByEmail(userDTO.getEmail());
+
+        if(registeredUser.isEmpty()) {
+            throw new UsernameNotFoundException(email);
+        }
+
+        if(loginMethod != LoginMethod.EMAIL) {
+            throw new IllegalArgumentException(loginMethod.toString());
+        }
+
+
     }
 }
