@@ -11,7 +11,7 @@ import java.util.UUID;
 public class UserFixture {
     private static final UUID defaultUserId = UUID.randomUUID();
     private static final String defaultEmail = "test@naver.com";
-    private static final String defaultEncryptedPassword = "$2a$10$2GKshOTKJLpDvRz9zhcBde7lqKYcOTn7pf9kJHp11HJnlQQv6i8l6";
+    private static final String defaultEncryptedPassword = "encryptedPassword123!!";
     private static final LoginMethod defaultLoginMethod = LoginMethod.EMAIL;
     private static final List<Todo> defaultTodos = new ArrayList<>();
     public static User createDefaultUser() {

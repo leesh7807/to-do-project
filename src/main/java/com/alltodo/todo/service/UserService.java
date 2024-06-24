@@ -7,6 +7,11 @@ import com.alltodo.todo.exception.UserAlreadyExistsException;
 import com.alltodo.todo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,9 +22,10 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -27,25 +33,36 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new IllegalArgumentException(email));
     }
     @Transactional
-    public void signUpWithEmail(UserDTO userDTO) {
-        String email = userDTO.getEmail();
-        String password = userDTO.getPassword();
-        LoginMethod loginMethod = userDTO.getLoginMethod();
-
-        if(loginMethod != LoginMethod.EMAIL) {
-            throw new IllegalArgumentException(loginMethod.toString());
-        }
-
-        Optional<User> duplicatedEmailUser = userRepository.findByEmail(email);
-        if (duplicatedEmailUser.isPresent()) {
-            throw new UserAlreadyExistsException(email);
-        }
+    public void signUpWithEmail(UserDTO userDTO) throws IllegalArgumentException, UserAlreadyExistsException {
+        validateLoginMethod(LoginMethod.EMAIL, userDTO.getLoginMethod());
+        validateThereAreNoDuplicateEmail(userDTO.getEmail());
 
         User newUser = User.builder().
-                email(email).
-                encryptedPassword(passwordEncoder.encode(password)).
-                loginMethod(loginMethod)
+                email(userDTO.getEmail()).
+                encryptedPassword(passwordEncoder.encode(userDTO.getPassword())).
+                loginMethod(userDTO.getLoginMethod())
                 .build();
         userRepository.save(newUser);
+    }
+
+    @Transactional
+    public void signInWithEmail(UserDTO userDTO) throws IllegalArgumentException, AuthenticationException {
+        validateLoginMethod(LoginMethod.EMAIL, userDTO.getLoginMethod());
+
+        // spring-security authentication
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // return jwt token
+    }
+
+    public void validateLoginMethod(LoginMethod expected, LoginMethod actual) {
+        if(expected != actual) throw new IllegalArgumentException(actual.toString());
+    }
+
+    public void validateThereAreNoDuplicateEmail(String email) {
+        Optional<User> duplicateEmailUser = userRepository.findByEmail(email);
+        if (duplicateEmailUser.isPresent()) throw new UserAlreadyExistsException(email);
     }
 }
