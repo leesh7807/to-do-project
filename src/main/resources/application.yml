@@ -17,6 +17,7 @@ spring:
 #    include: oauth
 
 jwt:
+  # noinspection SpringBootApplicationYaml
   secret: ${JWT_SECRET}
 
 logging:
