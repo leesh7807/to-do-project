@@ -1,5 +1,7 @@
 package com.alltodo.todo.configuration;
 
+import com.alltodo.todo.configuration.jwt.JwtRequestFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,10 +15,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.server.authentication.RedirectServerAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final JwtRequestFilter jwtRequestFilter;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -39,10 +46,20 @@ public class SecurityConfig {
                 // JSON 이용한 로그인 사용.
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                // JWT 기반 인증은 불필요.
+                // JWT 기반 인증에서 csrf 불필요.
                 .csrf(AbstractHttpConfigurer::disable)
                 // JWT 기반 인증 세션 X.
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/login").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling((exceptionHandling) -> exceptionHandling
+                        .accessDeniedPage("/login")
+                );
+
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 }
