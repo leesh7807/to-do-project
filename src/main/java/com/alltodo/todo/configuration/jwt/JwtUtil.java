@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.util.Date;
+import java.util.*;
 
 @Component
 public class JwtUtil {
@@ -27,10 +27,13 @@ public class JwtUtil {
                 .compact();
     }
 
+    public Claims parseToken(String token) {
+        return Jwts.parser().verifyWith(key()).build().parseSignedClaims(token).getPayload();
+    }
     public boolean validateToken(String token) {
         try {
             Claims claims = Jwts.parser().verifyWith(key()).build().parseSignedClaims(token).getPayload();
-            return !isTokenExpired(claims);
+            return !isExpired(claims.getExpiration());
         } catch(JwtException e) {
             return false;
         }
@@ -45,7 +48,7 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    private boolean isTokenExpired(Claims claims) {
-        return claims.getExpiration().before(new Date());
+    private boolean isExpired(Date exp) {
+        return exp.before(new Date());
     }
 }
