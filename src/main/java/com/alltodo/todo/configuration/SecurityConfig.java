@@ -15,9 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.server.authentication.RedirectServerAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -46,7 +44,7 @@ public class SecurityConfig {
                 // JSON 이용한 로그인 사용.
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                // JWT 기반 인증에서 csrf 불필요.
+                // JWT 기반 인증 csrf 불필요.
                 .csrf(AbstractHttpConfigurer::disable)
                 // JWT 기반 인증 세션 X.
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

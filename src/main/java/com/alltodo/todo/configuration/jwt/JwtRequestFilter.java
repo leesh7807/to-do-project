@@ -2,6 +2,8 @@ package com.alltodo.todo.configuration.jwt;
 
 import com.alltodo.todo.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,23 +28,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        final String authorizationHeader = request.getHeader("Authorization");
-
-        Claims claims = Optional.ofNullable(request.getHeader("Authorization"))
-                .filter(it -> it.startsWith("Bearer "))
-                .map(it -> it.substring(7))
-                .map(jwtUtil::parseToken)
-                .orElse(null);
         String username = null;
-        String jwt = null;
+        try {
+            username = Optional.ofNullable(request.getHeader("Authorization"))
+                    .filter(it -> it.startsWith("Bearer "))
+                    .map(it -> it.substring(7))
+                    .map(jwtUtil::parseToken)
+                    .map(Claims::getSubject)
+                    .orElse(null);
+        } catch(ExpiredJwtException e) {
+            // Refresh Token 존재 여부 확인 -> Refresh 진행 구현
 
-
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
-        }
-
-        if(jwtUtil.validateToken(jwt)) {
-                username = jwtUtil.extractUsername(jwt);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"error\": \"Token has expired\"}");
+        } catch(JwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"error\": \"Invalid Token\"}");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

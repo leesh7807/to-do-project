@@ -1,7 +1,6 @@
 package com.alltodo.todo.configuration.jwt;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -30,25 +29,9 @@ public class JwtUtil {
     public Claims parseToken(String token) {
         return Jwts.parser().verifyWith(key()).build().parseSignedClaims(token).getPayload();
     }
-    public boolean validateToken(String token) {
-        try {
-            Claims claims = Jwts.parser().verifyWith(key()).build().parseSignedClaims(token).getPayload();
-            return !isExpired(claims.getExpiration());
-        } catch(JwtException e) {
-            return false;
-        }
-    }
-
-    public String extractUsername(String token) {
-        return Jwts.parser().verifyWith(key()).build().parseSignedClaims(token).getPayload().getSubject();
-    }
 
     private SecretKey key() {
         byte[] keyBytes = Decoders.BASE64.decode(JWT_SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    private boolean isExpired(Date exp) {
-        return exp.before(new Date());
     }
 }
