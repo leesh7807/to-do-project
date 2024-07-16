@@ -26,6 +26,15 @@ public class JwtUtil {
                 .compact();
     }
 
+    public String generateExpiredToken(String username) {
+        return Jwts.builder()
+                .subject(username)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() - EXPIRATION_TIME))
+                .signWith(key())
+                .compact();
+    }
+
     public Claims parseToken(String token) {
         return Jwts.parser().verifyWith(key()).build().parseSignedClaims(token).getPayload();
     }

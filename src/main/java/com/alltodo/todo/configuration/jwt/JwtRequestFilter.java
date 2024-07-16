@@ -28,7 +28,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String username = null;
+        String username;
         try {
             username = Optional.ofNullable(request.getHeader("Authorization"))
                     .filter(it -> it.startsWith("Bearer "))
@@ -41,9 +41,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("{\"error\": \"Token has expired\"}");
+            return;
         } catch(JwtException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("{\"error\": \"Invalid Token\"}");
+            return;
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

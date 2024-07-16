@@ -51,9 +51,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/login").permitAll()
                         .anyRequest().authenticated()
-                )
-                .exceptionHandling((exceptionHandling) -> exceptionHandling
-                        .accessDeniedPage("/login")
                 );
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
