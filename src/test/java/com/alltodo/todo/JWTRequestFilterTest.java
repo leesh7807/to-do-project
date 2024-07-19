@@ -28,7 +28,7 @@ public class JWTRequestFilterTest {
     UserDetailsServiceImpl userDetailsService;
 
     @Test
-    public void testValidToken() throws Exception {
+    public void validToken() throws Exception {
         String validToken = jwtUtil.generateToken("test@naver.com");
         given(userDetailsService.loadUserByUsername("test@naver.com")).willReturn(UserFixture.createDefaultUser());
 
