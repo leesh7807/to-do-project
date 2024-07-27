@@ -29,7 +29,7 @@ public class JWTRequestFilterTest {
 
     @Test
     public void validToken() throws Exception {
-        String validToken = jwtUtil.generateToken("test@naver.com");
+        String validToken = jwtUtil.generateAccessToken("test@naver.com");
         given(userDetailsService.loadUserByUsername("test@naver.com")).willReturn(UserFixture.createDefaultUser());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/")
@@ -39,7 +39,7 @@ public class JWTRequestFilterTest {
 
     @Test
     public void expiredToken() throws Exception {
-        String expiredToken = jwtUtil.generateExpiredToken("test@naver.com");
+        String expiredToken = jwtUtil.generateExpiredAccessToken("test@naver.com");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/")
                         .header("Authorization", "Bearer " + expiredToken))

@@ -11,6 +11,7 @@ services:
       - 'MYSQL_DATABASE=todo'
       - 'MYSQL_USER=local'
       - 'MYSQL_PASSWORD=1234'
+    restart: always
   redis:
     container_name: todo_redis
     image: redis:latest

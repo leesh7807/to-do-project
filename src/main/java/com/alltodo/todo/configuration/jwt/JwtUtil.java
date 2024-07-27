@@ -17,7 +17,7 @@ public class JwtUtil {
     @Value("${jwt.expiration_time}")
     private long EXPIRATION_TIME;
 
-    public String generateToken(String username) {
+    public String generateAccessToken(String username) {
         return Jwts.builder()
                 .subject(username)
                 .issuedAt(new Date())
@@ -26,7 +26,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String generateExpiredToken(String username) {
+    public String generateExpiredAccessToken(String username) {
         return Jwts.builder()
                 .subject(username)
                 .issuedAt(new Date())
