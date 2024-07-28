@@ -1,6 +1,6 @@
-package com.alltodo.todo.configuration;
+package com.alltodo.todo.config;
 
-import com.alltodo.todo.configuration.jwt.JwtRequestFilter;
+import com.alltodo.todo.config.token_auth.JwtRequestFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

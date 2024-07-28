@@ -1,6 +1,6 @@
 package com.alltodo.todo.repository;
 
-import com.alltodo.todo.entity.RefreshToken;
+import com.alltodo.todo.config.token_auth.RefreshToken;
 import com.alltodo.todo.fixture.entity.RefreshTokenFixture;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

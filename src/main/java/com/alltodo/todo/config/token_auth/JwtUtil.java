@@ -1,4 +1,4 @@
-package com.alltodo.todo.configuration.jwt;
+package com.alltodo.todo.config.token_auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

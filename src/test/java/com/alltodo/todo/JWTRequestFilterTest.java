@@ -1,6 +1,6 @@
 package com.alltodo.todo;
 
-import com.alltodo.todo.configuration.jwt.JwtUtil;
+import com.alltodo.todo.config.token_auth.JwtUtil;
 import com.alltodo.todo.fixture.entity.UserFixture;
 import com.alltodo.todo.service.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;

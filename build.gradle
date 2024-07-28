@@ -43,6 +43,9 @@ dependencies {
 	//thymeleaf
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
+	// https://mvnrepository.com/artifact/com.github.ua-parser/uap-java
+	implementation 'com.github.ua-parser:uap-java:1.6.1'
 }
 
 tasks.named('test') {

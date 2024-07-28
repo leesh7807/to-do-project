@@ -1,4 +1,4 @@
-package com.alltodo.todo.entity;
+package com.alltodo.todo.config.token_auth;
 
 import jakarta.persistence.Id;
 import lombok.*;
