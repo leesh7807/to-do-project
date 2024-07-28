@@ -60,18 +60,24 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private void processExpiredToken(HttpServletRequest request, HttpServletResponse response, ExpiredJwtException e) throws IOException {
         UUID refreshToken = extractRefreshToken(request);
+        if(refreshToken == null) {
+            sendUnauthorizedResponse(response, "Token expired");
+            return;
+        }
         String expiredUsername = e.getClaims().getSubject();
         String userAgent = extractUserAgent(request);
         if(refreshTokenUtil.validateRefreshToken(expiredUsername, userAgent, refreshToken)) {
-            // issue new refresh token
             UUID nextRefreshToken = refreshTokenUtil.generateUUIDRefreshToken();
             refreshTokenUtil.saveRefreshToken(expiredUsername, userAgent, nextRefreshToken);
 
-            // issue new access token ************************
+            String accessToken = jwtUtil.generateAccessToken(expiredUsername);
 
+            response.setHeader("Authorization", "Bearer " + accessToken);
+            response.setHeader("Refresh-Token", nextRefreshToken.toString());
+            sendUnauthorizedResponse(response, "New Tokens issued");
         }
         else {
-            sendUnauthorizedResponse(response, "Token has expired");
+            sendUnauthorizedResponse(response, "Error occurred. Please re-login");
         }
     }
 
@@ -89,7 +95,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     private void handleInvalidToken(HttpServletResponse response) throws IOException{
-        sendUnauthorizedResponse(response, "Error has occurred");
+        sendUnauthorizedResponse(response, "Error occurred. Please re-login");
     }
 
     private void sendUnauthorizedResponse(HttpServletResponse response, String message) throws IOException {
