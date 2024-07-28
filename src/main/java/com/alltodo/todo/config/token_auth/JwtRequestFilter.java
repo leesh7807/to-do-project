@@ -39,7 +39,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 setAuthentication(request, userDetails);
             }
         } catch(ExpiredJwtException e) {
-            handleExpiredToken(request, response, e);
+            processExpiredToken(request, response, e);
             return;
         } catch(JwtException e) {
             handleInvalidToken(response);
@@ -58,7 +58,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 .orElse(null);
     }
 
-    private void handleExpiredToken(HttpServletRequest request, HttpServletResponse response, ExpiredJwtException e) throws IOException {
+    private void processExpiredToken(HttpServletRequest request, HttpServletResponse response, ExpiredJwtException e) throws IOException {
         UUID refreshToken = extractRefreshToken(request);
         String expiredUsername = e.getClaims().getSubject();
         String userAgent = extractUserAgent(request);
