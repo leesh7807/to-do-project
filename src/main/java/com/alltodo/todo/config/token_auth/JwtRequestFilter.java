@@ -74,9 +74,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             response.setHeader("Authorization", "Bearer " + accessToken);
             response.setHeader("Refresh-Token", nextRefreshToken.toString());
-            sendUnauthorizedResponse(response, "New Tokens issued");
+            sendUnauthorizedResponse(response, "New tokens issued");
         }
         else {
+            // to-do: add refresh token delete method
+
             sendUnauthorizedResponse(response, "Error occurred. Please re-login");
         }
     }
@@ -90,7 +92,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private String extractUserAgent(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader("User-Agent"))
                 .map(parser::parse)
-                .map(client -> client.userAgent.family)
+                .map(client -> client.device.family + client.userAgent.family)
                 .orElse("other");
     }
 
@@ -100,7 +102,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private void sendUnauthorizedResponse(HttpServletResponse response, String message) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("{\"error\": \"" + message + "\"}");
+        response.getWriter().write("{\"message\": \"" + message + "\"}");
     }
 
     private void setAuthentication(HttpServletRequest request, UserDetails userDetails) {
