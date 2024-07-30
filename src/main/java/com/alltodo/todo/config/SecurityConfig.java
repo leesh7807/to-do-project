@@ -49,7 +49,7 @@ public class SecurityConfig {
                 // JWT 기반 인증 세션 X.
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/", "/login").permitAll()
+                        .requestMatchers("/", "/login", "/join").permitAll()
                         .anyRequest().authenticated()
                 );
 

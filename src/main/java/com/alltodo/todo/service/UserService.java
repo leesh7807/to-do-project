@@ -1,7 +1,7 @@
 package com.alltodo.todo.service;
 
+import com.alltodo.todo.config.token_auth.JwtUtil;
 import com.alltodo.todo.dto.UserDTO;
-import com.alltodo.todo.entity.LoginMethod;
 import com.alltodo.todo.entity.User;
 import com.alltodo.todo.exception.UserAlreadyExistsException;
 import com.alltodo.todo.repository.UserRepository;
@@ -23,10 +23,10 @@ public class UserService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
 
     @Transactional
-    public void signUpWithEmail(UserDTO userDTO) throws IllegalArgumentException, UserAlreadyExistsException {
-        validateLoginMethod(LoginMethod.EMAIL, userDTO.getLoginMethod());
+    public void join(UserDTO userDTO) throws UserAlreadyExistsException {
         validateThereAreNoDuplicateEmail(userDTO.getEmail());
 
         User newUser = User.builder().
@@ -38,19 +38,14 @@ public class UserService{
     }
 
     @Transactional
-    public void signInWithEmail(UserDTO userDTO) throws IllegalArgumentException, AuthenticationException {
-        validateLoginMethod(LoginMethod.EMAIL, userDTO.getLoginMethod());
-
+    public String login(UserDTO userDTO) throws AuthenticationException {
         // spring-security authentication
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // return jwt token
-    }
-
-    public void validateLoginMethod(LoginMethod expected, LoginMethod actual) {
-        if(expected != actual) throw new IllegalArgumentException(actual.toString());
+        return jwtUtil.generateAccessToken(userDTO.getEmail());
     }
 
     public void validateThereAreNoDuplicateEmail(String email) {

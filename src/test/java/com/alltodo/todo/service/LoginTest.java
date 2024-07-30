@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class SignInWithEmailTest {
+public class LoginTest {
     @Mock
     AuthenticationManager authenticationManager;
     @InjectMocks
@@ -33,7 +33,7 @@ public class SignInWithEmailTest {
 
         // when
         try {
-            userService.signInWithEmail(userDTO);
+            userService.login(userDTO);
 
         // then
         } catch(AuthenticationException ignored) {

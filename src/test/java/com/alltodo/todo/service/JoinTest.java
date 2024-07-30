@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class SignUpWithEmailTest {
+public class JoinTest {
     @Mock
     private UserRepository userRepository;
     @Mock
@@ -39,7 +39,7 @@ public class SignUpWithEmailTest {
 
         // when
         try {
-            userService.signUpWithEmail(userDTO);
+            userService.join(userDTO);
 
         // then
         } catch(Exception e) {
@@ -55,7 +55,7 @@ public class SignUpWithEmailTest {
 
         // when
         try {
-            userService.signUpWithEmail(userDTO);
+            userService.join(userDTO);
 
         // then
             fail("should throw IllegalArgumentException");
@@ -73,7 +73,7 @@ public class SignUpWithEmailTest {
 
         // when
         try {
-            userService.signUpWithEmail(userDTO);
+            userService.join(userDTO);
 
         // then
             fail("should throw UserAlreadyExistsException");
