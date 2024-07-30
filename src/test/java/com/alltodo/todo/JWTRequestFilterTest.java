@@ -76,7 +76,19 @@ public class JWTRequestFilterTest {
     }
 
     @Test
-    public void refreshTokenMismatch() {
+    public void refreshTokenMismatch() throws Exception {
+        String expiredToken = jwtUtil.generateExpiredAccessToken("test@naver.com");
+        RefreshToken refreshToken = RefreshTokenFixture.createDefaultRefreshToken();
+        given(refreshTokenUtil.validateRefreshToken(anyString(), anyString(), any())).willReturn(false);
+        given(refreshTokenUtil.generateUUIDRefreshToken()).willReturn(UUID.randomUUID());
 
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("Authorization", "Bearer " + expiredToken);
+        httpHeaders.set("Refresh-Token", refreshToken.getRefreshToken().toString());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/")
+                        .headers(httpHeaders))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().json("{\"message\": \"Error occurred. Please re-login\"}"));
     }
 }

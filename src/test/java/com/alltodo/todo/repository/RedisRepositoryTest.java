@@ -28,4 +28,36 @@ public class RedisRepositoryTest {
                 () -> assertEquals(refreshToken.getRefreshToken(), savedRefreshToken.getRefreshToken())
         );
     }
+
+    @Test
+    public void findRefreshToken() {
+        // given
+        RefreshToken refreshToken = RefreshTokenFixture.createDefaultRefreshToken();
+        redisRepository.save(refreshToken);
+
+        // when
+        RefreshToken findingRefreshToken = redisRepository.findById(refreshToken.getId()).orElse(null);
+
+        // then
+        assertNotNull(findingRefreshToken);
+        assertAll(
+                () -> assertEquals(findingRefreshToken.getId(), refreshToken.getId()),
+                () -> assertEquals(findingRefreshToken.getRefreshToken().toString(),
+                        refreshToken.getRefreshToken().toString())
+        );
+    }
+
+    @Test
+    public void deleteRefreshToken() {
+        // given
+        RefreshToken refreshToken = RefreshTokenFixture.createDefaultRefreshToken();
+        redisRepository.save(refreshToken);
+
+        // when
+        redisRepository.deleteById(refreshToken.getId());
+        RefreshToken deletedRefreshToken = redisRepository.findById(refreshToken.getId()).orElse(null);
+
+        // then
+        assertNull(deletedRefreshToken);
+    }
 }

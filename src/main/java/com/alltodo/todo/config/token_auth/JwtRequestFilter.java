@@ -64,6 +64,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             sendUnauthorizedResponse(response, "Token expired");
             return;
         }
+
         String expiredUsername = e.getClaims().getSubject();
         String userAgent = extractUserAgent(request);
         if(refreshTokenUtil.validateRefreshToken(expiredUsername, userAgent, refreshToken)) {
@@ -78,6 +79,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         else {
             // to-do: add refresh token delete method
+            refreshTokenUtil.deleteRefreshTokenById(expiredUsername, userAgent);
 
             sendUnauthorizedResponse(response, "Error occurred. Please re-login");
         }

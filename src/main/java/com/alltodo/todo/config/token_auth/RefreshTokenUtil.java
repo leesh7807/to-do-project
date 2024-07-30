@@ -31,4 +31,10 @@ public class RefreshTokenUtil {
                 .build();
         redisRepository.save(saveToken);
     }
+
+    @Transactional
+    public void deleteRefreshTokenById(String username, String userAgent) {
+        String key = username + ":" + userAgent;
+        redisRepository.deleteById(key);
+    }
 }
