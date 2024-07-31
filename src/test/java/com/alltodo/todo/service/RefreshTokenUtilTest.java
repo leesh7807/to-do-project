@@ -25,7 +25,7 @@ public class RefreshTokenUtilTest {
         RefreshToken refreshToken = RefreshTokenFixture.createDefaultRefreshToken();
         redisRepository.save(refreshToken);
 
-        assertTrue(refreshTokenUtil.validateRefreshToken("test@naver.com", "PC", refreshToken.getRefreshToken()));
+        assertTrue(refreshTokenUtil.validateRefreshToken("test@naver.com:PC", refreshToken.getRefreshToken()));
     }
 
     @Test
@@ -33,6 +33,6 @@ public class RefreshTokenUtilTest {
         RefreshToken refreshToken = RefreshTokenFixture.createDefaultRefreshToken();
         redisRepository.save(refreshToken);
 
-        assertFalse(refreshTokenUtil.validateRefreshToken("test@naver.com", "PC", UUID.randomUUID()));
+        assertFalse(refreshTokenUtil.validateRefreshToken("test@naver.com:PC", UUID.randomUUID()));
     }
 }

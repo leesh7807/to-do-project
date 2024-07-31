@@ -60,7 +60,8 @@ public class JWTRequestFilterTest {
     public void withRefreshToken() throws Exception {
         String expiredToken = jwtUtil.generateExpiredAccessToken("test@naver.com");
         RefreshToken refreshToken = RefreshTokenFixture.createDefaultRefreshToken();
-        given(refreshTokenUtil.validateRefreshToken(anyString(), anyString(), any())).willReturn(true);
+        given(refreshTokenUtil.makeRefreshTokenKey(anyString(), anyString())).willReturn("key");
+        given(refreshTokenUtil.validateRefreshToken(anyString(), any())).willReturn(true);
         given(refreshTokenUtil.generateUUIDRefreshToken()).willReturn(UUID.randomUUID());
 
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -79,7 +80,7 @@ public class JWTRequestFilterTest {
     public void refreshTokenMismatch() throws Exception {
         String expiredToken = jwtUtil.generateExpiredAccessToken("test@naver.com");
         RefreshToken refreshToken = RefreshTokenFixture.createDefaultRefreshToken();
-        given(refreshTokenUtil.validateRefreshToken(anyString(), anyString(), any())).willReturn(false);
+        given(refreshTokenUtil.validateRefreshToken(anyString(), any())).willReturn(false);
         given(refreshTokenUtil.generateUUIDRefreshToken()).willReturn(UUID.randomUUID());
 
         HttpHeaders httpHeaders = new HttpHeaders();

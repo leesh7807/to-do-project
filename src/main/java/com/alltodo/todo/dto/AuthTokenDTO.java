@@ -1,13 +1,13 @@
 package com.alltodo.todo.dto;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.util.UUID;
 
-@RequiredArgsConstructor
-@Getter
-public class AuthTokenDTO {
-    private final String accessToken;
-    private final UUID refreshToken;
+public record AuthTokenDTO(String accessToken, UUID refreshToken) {
+    public String getAccessTokenWithBearer() {
+        return "Bearer " + accessToken;
+    }
+
+    public String getRefreshTokenAtString() {
+        return refreshToken.toString();
+    }
 }

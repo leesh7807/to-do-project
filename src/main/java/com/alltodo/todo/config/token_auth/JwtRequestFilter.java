@@ -1,5 +1,7 @@
 package com.alltodo.todo.config.token_auth;
 
+import com.alltodo.todo.dto.AuthTokenDTO;
+import com.alltodo.todo.service.AuthService;
 import com.alltodo.todo.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -16,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ua_parser.Parser;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -28,7 +29,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtil jwtUtil;
     private final RefreshTokenUtil refreshTokenUtil;
-    private final Parser parser;
+    private final AuthService authService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
@@ -65,23 +66,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             return;
         }
 
-        String expiredUsername = e.getClaims().getSubject();
-        String userAgent = extractUserAgent(request);
-        if(refreshTokenUtil.validateRefreshToken(expiredUsername, userAgent, refreshToken)) {
-            UUID nextRefreshToken = refreshTokenUtil.generateUUIDRefreshToken();
-            refreshTokenUtil.saveRefreshToken(expiredUsername, userAgent, nextRefreshToken);
+        String username = e.getClaims().getSubject();
+        String userAgent = request.getHeader("user-agent");
+        String refreshTokenKey = refreshTokenUtil.makeRefreshTokenKey(username, userAgent);
+        if(refreshTokenUtil.validateRefreshToken(refreshTokenKey, refreshToken)) {
+            AuthTokenDTO authToken = authService.makeAuthToken(username, userAgent);
 
-            String accessToken = jwtUtil.generateAccessToken(expiredUsername);
+            response.setHeader("Authorization", authToken.getAccessTokenWithBearer());
+            response.setHeader("Refresh-Token", authToken.getRefreshTokenAtString());
 
-            response.setHeader("Authorization", "Bearer " + accessToken);
-            response.setHeader("Refresh-Token", nextRefreshToken.toString());
             sendUnauthorizedResponse(response, "New tokens issued");
         }
         else {
             // to-do: add refresh token delete method
-            refreshTokenUtil.deleteRefreshTokenById(expiredUsername, userAgent);
+            refreshTokenUtil.deleteRefreshTokenById(refreshTokenKey);
 
-            sendUnauthorizedResponse(response, "Error occurred. Please re-login");
+            sendUnauthorizedResponse(response, "Validate fail. Please re-login");
         }
     }
 
@@ -89,13 +89,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         return Optional.ofNullable(request.getHeader("Refresh-Token"))
                 .map(UUID::fromString)
                 .orElse(null);
-    }
-
-    private String extractUserAgent(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader("User-Agent"))
-                .map(parser::parse)
-                .map(client -> client.device.family + client.userAgent.family)
-                .orElse("other");
     }
 
     private void handleInvalidToken(HttpServletResponse response) throws IOException{

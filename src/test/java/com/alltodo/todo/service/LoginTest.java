@@ -33,7 +33,7 @@ public class LoginTest {
 
         // when
         try {
-            userService.login(userDTO);
+            userService.login(userDTO, "");
 
         // then
         } catch(AuthenticationException ignored) {
