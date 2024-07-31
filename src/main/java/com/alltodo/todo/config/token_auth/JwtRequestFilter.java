@@ -39,6 +39,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
                 setAuthentication(request, userDetails);
             }
+        /* If there are no token, 'Exception' does not lead to 'Return'.
+         * To handle all exceptions consistently rather than locally, you should implement a custom 'AuthenticationEntryPoint'.
+         * 'ExceptionTranslatorFilter' in Spring-Security routes all exceptions in security filter chain to the 'AuthenticationEntryPoint' and 'AccessDeniedException'.
+         */
         } catch(ExpiredJwtException e) {
             processExpiredToken(request, response, e);
             return;

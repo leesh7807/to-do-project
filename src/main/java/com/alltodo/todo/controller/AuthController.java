@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -27,17 +28,22 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body("Error : User already exists.");
         }
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body("User join successfully.");
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody @Valid UserDTO userDTO, @RequestHeader("user-agent") String userAgent) {
-        AuthTokenDTO authToken = userService.login(userDTO, userAgent);
+        try {
+            AuthTokenDTO authToken = userService.login(userDTO, userAgent);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .header("Authorization", authToken.getAccessTokenWithBearer())
-                .header("Refresh-Token", authToken.getRefreshTokenAtString())
-                .body("User login successfully");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .header("Authorization", authToken.getAccessTokenWithBearer())
+                    .header("Refresh-Token", authToken.getRefreshTokenAtString())
+                    .body("User login successfully.");
+        } catch(AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Your email or password is incorrect.");
+        }
     }
 }
