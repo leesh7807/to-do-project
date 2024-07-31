@@ -70,7 +70,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String userAgent = request.getHeader("user-agent");
         String refreshTokenKey = refreshTokenUtil.makeRefreshTokenKey(username, userAgent);
         if(refreshTokenUtil.validateRefreshToken(refreshTokenKey, refreshToken)) {
-            AuthTokenDTO authToken = authService.makeAuthToken(username, userAgent);
+            AuthTokenDTO authToken = authService.makeAuthTokenDTO(username, userAgent);
 
             response.setHeader("Authorization", authToken.getAccessTokenWithBearer());
             response.setHeader("Refresh-Token", authToken.getRefreshTokenAtString());
@@ -81,7 +81,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             // to-do: add refresh token delete method
             refreshTokenUtil.deleteRefreshTokenById(refreshTokenKey);
 
-            sendUnauthorizedResponse(response, "Validate fail. Please re-login");
+            sendUnauthorizedResponse(response, "Error occurred. Please re-login");
         }
     }
 

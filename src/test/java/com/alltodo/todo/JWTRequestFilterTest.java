@@ -3,8 +3,10 @@ package com.alltodo.todo;
 import com.alltodo.todo.config.token_auth.JwtUtil;
 import com.alltodo.todo.config.token_auth.RefreshToken;
 import com.alltodo.todo.config.token_auth.RefreshTokenUtil;
+import com.alltodo.todo.dto.AuthTokenDTO;
 import com.alltodo.todo.fixture.entity.RefreshTokenFixture;
 import com.alltodo.todo.fixture.entity.UserFixture;
+import com.alltodo.todo.service.AuthService;
 import com.alltodo.todo.service.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,9 @@ public class JWTRequestFilterTest {
     @MockBean
     RefreshTokenUtil refreshTokenUtil;
 
+    @MockBean
+    AuthService authService;
+
     @Test
     public void validToken() throws Exception {
         String validToken = jwtUtil.generateAccessToken("test@naver.com");
@@ -60,9 +65,8 @@ public class JWTRequestFilterTest {
     public void withRefreshToken() throws Exception {
         String expiredToken = jwtUtil.generateExpiredAccessToken("test@naver.com");
         RefreshToken refreshToken = RefreshTokenFixture.createDefaultRefreshToken();
-        given(refreshTokenUtil.makeRefreshTokenKey(anyString(), anyString())).willReturn("key");
-        given(refreshTokenUtil.validateRefreshToken(anyString(), any())).willReturn(true);
-        given(refreshTokenUtil.generateUUIDRefreshToken()).willReturn(UUID.randomUUID());
+        given(refreshTokenUtil.validateRefreshToken(any(), any())).willReturn(true);
+        given(authService.makeAuthTokenDTO(any(), any())).willReturn(new AuthTokenDTO("test@naver.com", UUID.randomUUID()));
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Authorization", "Bearer " + expiredToken);
